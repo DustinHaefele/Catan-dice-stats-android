@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="4dp"
+    >
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="4dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_player_name"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_alignParentTop="true"
+            android:padding="4dp"
+            android:id="@+id/player_name"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_player_wins"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:padding="4dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/player_name"
+            android:id="@+id/player_wins"
+            android:textColor="@android:color/black"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_player_games"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/player_wins"
+            android:id="@+id/player_games"
+            android:padding="4dp"
+            android:textColor="@android:color/black"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_player_pct"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:padding="4dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/player_games"
+            android:id="@+id/player_win_pct"
+            android:textColor="@android:color/black"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

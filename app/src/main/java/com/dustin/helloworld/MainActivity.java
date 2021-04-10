@@ -11,9 +11,22 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.dustin.helloworld.dto.CountDto;
+import com.dustin.helloworld.dto.PlayerDto;
 import com.dustin.helloworld.services.CountService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener {
 
@@ -23,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
 
     private FrameLayout fragmentContainer;
     private BottomNavigationView bottomNav;
+    private List<PlayerDto> players = new ArrayList<>();
+    private RequestQueue mQueue;
+
 
 
     @Override
@@ -34,51 +50,72 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
+        mQueue = Volley.newRequestQueue(this);
+        getPlayerStats();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GameFragment()).commit();
 
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
-                Fragment selectedFragment = null;
 
                 switch(item.getItemId()) {
                     case R.id.nav_game:
-                        openCountFragment(countDto, "GAME");
+                        openFragment(countDto, "GAME");
                         break;
                     case R.id.nav_players:
-                        selectedFragment = new PlayersFragment();
+                        openFragment(null, "PLAYERS");
                         break;
                     case R.id.nav_stats:
-                        openCountFragment(countDto, "STATS");
+                        openFragment(countDto, "STATS");
                         break;
-                }
-                if(selectedFragment != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 }
                 return true;
             };
-    public void openCountFragment(CountDto countDto, String type) {
+    public void openFragment(CountDto countDto, String type) {
         Fragment fragment;
+        String tag = null;
         if(type.equals("GAME")) {
             fragment = GameFragment.newInstance(countDto);
-        } else {
+            tag = "GAMES_FRAGMENT";
+        } else if (type.equals("STATS")) {
             fragment = StatsFragment.newInstance(countDto);
+            tag = "STATS_FRAGMENT";
+        } else {
+            fragment = PlayersFragment.newInstance(players);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.add(R.id.fragment_container, fragment, "GAMES_FRAGMENT").commit();
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag).commit();
     }
 
-    public void openPlayerFragment(CountDto countDto) {
-        GameFragment fragment = GameFragment.newInstance(countDto);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.add(R.id.fragment_container, fragment, "GAMES_FRAGMENT").commit();
+    private void getPlayerStats() {
+        String url = "http://catan-dice-stats.herokuapp.io/api/players";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try{
+                        JSONArray playersJson = response.getJSONArray("players");
+
+                        for(int i =0 ; i < playersJson.length(); i++) {
+                            JSONObject player = playersJson.getJSONObject(i);
+                            String playerName = player.getString("name");
+                            Integer playerWins = player.getInt("wins");
+                            Integer playerGames = player.getInt("games");
+                            Double playerPct = player.getDouble("pct");
+
+                            PlayerDto playerDto = new PlayerDto(playerName, playerWins, playerGames, playerPct);
+                            players.add(playerDto);
+                        }
+
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }, error -> error.printStackTrace());
+        mQueue.add(request);
     }
 
 

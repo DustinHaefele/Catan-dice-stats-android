@@ -145,7 +145,7 @@ public class GameFragment extends Fragment {
         this.countDto = countDto;
     }
 
-    // TODO: Rename and change types and number of parameters
+
     public static GameFragment newInstance(CountDto count) {
         GameFragment fragment = new GameFragment();
         Bundle args = new Bundle();
