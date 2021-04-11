@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, PlayersFragment.OnFragmentInteractionListener {
 
 
 
@@ -126,5 +126,10 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     @Override
     public void onFragmentInteraction(CountDto count) {
         countDto = count;
+    }
+
+    @Override
+    public void onFragmentInteraction(List<PlayerDto> playerDtoList) {
+        players = playerDtoList;
     }
 }

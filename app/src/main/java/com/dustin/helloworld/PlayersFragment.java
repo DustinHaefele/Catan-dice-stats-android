@@ -33,8 +33,8 @@ public class PlayersFragment extends Fragment {
 
     private PlayersFragment.OnFragmentInteractionListener mListener;
 
-    public static GameFragment newInstance(List<PlayerDto> playerDtoList) {
-        GameFragment fragment = new GameFragment();
+    public static PlayersFragment newInstance(List<PlayerDto> playerDtoList) {
+        PlayersFragment fragment = new PlayersFragment();
         Bundle args = new Bundle();
         args.putSerializable(PLAYERS_DTO, (Serializable) playerDtoList);
         fragment.setArguments(args);
