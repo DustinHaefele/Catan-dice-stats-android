@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     }
 
     private void getPlayerStats() {
-        String url = "http://catan-dice-stats.herokuapp.io/api/players";
+        String url = "https://catan-dice-stats.herokuapp.com/api/player";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -101,12 +102,15 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
 
                         for(int i =0 ; i < playersJson.length(); i++) {
                             JSONObject player = playersJson.getJSONObject(i);
-                            String playerName = player.getString("name");
+                            Integer id = player.getInt("id");
+                            String playerName = player.getString("user_name");
+                            String fullName = player.getString("full_name");
                             Integer playerWins = player.getInt("wins");
-                            Integer playerGames = player.getInt("games");
-                            Double playerPct = player.getDouble("pct");
+                            Integer playerGames = player.getInt("games_played");
+                            Double playerPct = player.getDouble("win_pct");
 
-                            PlayerDto playerDto = new PlayerDto(playerName, playerWins, playerGames, playerPct);
+                            PlayerDto playerDto = new PlayerDto(id, playerName, fullName, playerWins, playerGames, playerPct);
+
                             players.add(playerDto);
                         }
 

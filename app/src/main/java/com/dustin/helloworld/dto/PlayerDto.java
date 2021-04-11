@@ -10,8 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlayerDto {
-    private String playerName;
-    private Integer playerWins;
-    private Integer playerGames;
-    private Double playerPct;
+    private Integer id;
+    private String user_name;
+    private String full_name;
+    private Integer wins;
+    private Integer games_played;
+    private Double win_pct;
 }
+
