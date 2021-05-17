@@ -16,5 +16,6 @@ public class PlayerDto {
     private Integer wins;
     private Integer games_played;
     private Double win_pct;
+
 }
 

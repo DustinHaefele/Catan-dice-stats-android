@@ -344,7 +344,7 @@ public class GameFragment extends Fragment {
 
     public void sendBack(CountDto countDto) {
         if(mListener !=null) {
-            mListener.onFragmentInteraction(countDto);
+            mListener.onFragmentInteraction(countDto, false);
         }
 
     }
@@ -367,6 +367,6 @@ public class GameFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(CountDto countDto);
+        void onFragmentInteraction(CountDto countDto, Boolean submit);
     }
 }

@@ -2,6 +2,7 @@ package com.dustin.helloworld.services;
 
 import com.dustin.helloworld.dto.CountDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ public class CountService {
         CountDto countDto = new CountDto();
         Map<String,Double> countStatsMap = new HashMap<>();
         Map<String, Integer> countMap = new HashMap<>();
+        ArrayList<String> losers = new ArrayList<>();
         countMap.put("two", 0);
         countMap.put("three", 0);
         countMap.put("four", 0);
@@ -23,6 +25,8 @@ public class CountService {
         countMap.put("eleven", 0);
         countMap.put("twelve", 0);
         countDto.setCountMap(countMap);
+        countDto.setWinner("");
+        countDto.setLosers(losers);
 
         for (Map.Entry<String,Integer> entry : countMap.entrySet()) {
             String key = entry.getKey();

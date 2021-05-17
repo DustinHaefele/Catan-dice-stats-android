@@ -2,6 +2,7 @@ package com.dustin.helloworld;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -27,9 +30,15 @@ import java.util.List;
 
 public class PlayersFragment extends Fragment {
 
-    private List<PlayerDto> players = new ArrayList<>();
+    private ArrayList<PlayerDto> players = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayout;
 
-    private static final String PLAYERS_DTO = "playersDto";
+
+
+
+    private static final String PLAYERS_DTO = "players";
 
     private PlayersFragment.OnFragmentInteractionListener mListener;
 
@@ -44,7 +53,30 @@ public class PlayersFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_player, container, false);
+        View v = inflater.inflate(R.layout.fragment_player, container, false);
+
+        mRecyclerView = v.findViewById(R.id.player_recycler);
+        mRecyclerView.setHasFixedSize(true);
+        mLayout = new LinearLayoutManager(this.getContext());
+
+        for(PlayerDto player : players) {
+            Log.d("player_name", player.getFull_name());
+        }
+
+        mRecyclerView.setLayoutManager(mLayout);
+
+        PlayerDto player = new PlayerDto(1,"theu", "theu", 1,1,1.0);
+
+        players.add(player);
+        for(PlayerDto playera : players) {
+            Log.d("HERE1", "HERE");
+            Log.d("HERE", playera.getGames_played().toString());
+        }
+
+        mAdapter = new PlayerAdapter(players);
+        mRecyclerView.setAdapter(mAdapter);
+
+        return v;
     }
 
 
@@ -67,7 +99,6 @@ public class PlayersFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(List<PlayerDto> playerDtoList);
+        void onFragmentInteraction(ArrayList<PlayerDto> playerDtoList);
     }
-
 }

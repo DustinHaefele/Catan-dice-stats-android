@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, PlayersFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, GamePlayersFragment.OnFragmentInteractionListener {
 
 
 
@@ -37,8 +39,9 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
 
     private FrameLayout fragmentContainer;
     private BottomNavigationView bottomNav;
-    private List<PlayerDto> players = new ArrayList<>();
+    private ArrayList<PlayerDto> players = new ArrayList<>();
     private RequestQueue mQueue;
+
 
 
 
@@ -52,9 +55,14 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         mQueue = Volley.newRequestQueue(this);
-        getPlayerStats();
+        //getPlayerStats();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GameFragment()).commit();
 
+//        mRecyclerView = findViewById(R.id.player_recycler);
+//        mLayout = new LinearLayoutManager(this);
+//        mAdapter = new PlayerAdapter(players);
+//
+//        mRecyclerView.setLayoutManager(mLayout);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                         openFragment(countDto, "GAME");
                         break;
                     case R.id.nav_players:
-                        openFragment(null, "PLAYERS");
+                        openFragment(countDto, "GAME_PLAYERS");
                         break;
                     case R.id.nav_stats:
                         openFragment(countDto, "STATS");
@@ -83,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
             fragment = StatsFragment.newInstance(countDto);
             tag = "STATS_FRAGMENT";
         } else {
-            fragment = PlayersFragment.newInstance(players);
+            fragment = GamePlayersFragment.newInstance(countDto);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -124,12 +132,11 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
 
 
     @Override
-    public void onFragmentInteraction(CountDto count) {
+    public void onFragmentInteraction(CountDto count, Boolean submit) {
         countDto = count;
+        if(submit) {
+            openFragment(countDto, "GAME");
+        }
     }
 
-    @Override
-    public void onFragmentInteraction(List<PlayerDto> playerDtoList) {
-        players = playerDtoList;
-    }
 }
