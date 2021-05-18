@@ -1,16 +1,12 @@
 package com.dustin.helloworld;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 
@@ -29,10 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, GamePlayersFragment.OnFragmentInteractionListener {
-
 
 
     private CountDto countDto = CountService.initializeCountDto();
@@ -41,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     private BottomNavigationView bottomNav;
     private ArrayList<PlayerDto> players = new ArrayList<>();
     private RequestQueue mQueue;
-
 
 
 
@@ -55,14 +48,9 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         mQueue = Volley.newRequestQueue(this);
-        //getPlayerStats();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GameFragment()).commit();
 
-//        mRecyclerView = findViewById(R.id.player_recycler);
-//        mLayout = new LinearLayoutManager(this);
-//        mAdapter = new PlayerAdapter(players);
-//
-//        mRecyclerView.setLayoutManager(mLayout);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -126,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                         e.printStackTrace();
                     }
 
-                }, error -> error.printStackTrace());
+                }, Throwable::printStackTrace);
         mQueue.add(request);
     }
 
@@ -134,8 +122,19 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     @Override
     public void onFragmentInteraction(CountDto count, Boolean submit) {
         countDto = count;
-        if(submit) {
-            openFragment(countDto, "GAME");
+        if(submit && !countDto.getWinner().isEmpty() && !countDto.getLosers().isEmpty()) {
+            String url = "https://catan-dice-stats.herokuapp.com/api/game";
+            JSONObject body = countDto.getCountDtoJson();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, body, response -> {
+                        Log.i("RESPONSE", response.toString());
+                        openFragment(CountService.initializeCountDto(), "GAME");
+                    }, error -> {
+                        openFragment(countDto, "GAME");
+                        error.printStackTrace();
+                    });
+            mQueue.add(jsonObjectRequest);
         }
     }
 
