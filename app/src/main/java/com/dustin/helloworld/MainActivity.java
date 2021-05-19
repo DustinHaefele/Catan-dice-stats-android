@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.dustin.helloworld.dto.CountDto;
+import com.dustin.helloworld.dto.GameStatsDto;
 import com.dustin.helloworld.dto.PlayerDto;
 import com.dustin.helloworld.services.CountService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     private FrameLayout fragmentContainer;
     private BottomNavigationView bottomNav;
     private ArrayList<PlayerDto> players = new ArrayList<>();
+    private GameStatsDto gameStatsDto;
     private RequestQueue mQueue;
 
 
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         mQueue = Volley.newRequestQueue(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GameFragment()).commit();
-
+        this.getPlayerStats();
+        this.getGameStats();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                         break;
                     case R.id.nav_players:
                         openFragment(countDto, "GAME_PLAYERS");
+                        break;
+                    case R.id.nav_player_stats:
+                        openFragment(countDto, "PLAYER_STATS");
                         break;
                     case R.id.nav_stats:
                         openFragment(countDto, "STATS");
@@ -76,8 +82,11 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
             fragment = GameFragment.newInstance(countDto);
             tag = "GAMES_FRAGMENT";
         } else if (type.equals("STATS")) {
-            fragment = StatsFragment.newInstance(countDto);
+            fragment = StatsFragment.newInstance(gameStatsDto);
             tag = "STATS_FRAGMENT";
+        }else if (type.equals("PLAYER_STATS")) {
+            fragment = PlayersFragment.newInstance(players);
+            tag = "PLAYER_STATS_FRAGMENT";
         } else {
             fragment = GamePlayersFragment.newInstance(countDto);
         }
@@ -91,31 +100,47 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     private void getPlayerStats() {
         String url = "https://catan-dice-stats.herokuapp.com/api/player";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                response -> {
+
+        JsonObjectRequest playerRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, response -> {
                     try{
-                        JSONArray playersJson = response.getJSONArray("players");
-
-                        for(int i =0 ; i < playersJson.length(); i++) {
-                            JSONObject player = playersJson.getJSONObject(i);
-                            Integer id = player.getInt("id");
-                            String playerName = player.getString("user_name");
-                            String fullName = player.getString("full_name");
-                            Integer playerWins = player.getInt("wins");
-                            Integer playerGames = player.getInt("games_played");
-                            Double playerPct = player.getDouble("win_pct");
-
-                            PlayerDto playerDto = new PlayerDto(id, playerName, fullName, playerWins, playerGames, playerPct);
-
+                        JSONArray playersArray = response.getJSONArray("players");
+                        for(int i =0; i<playersArray.length();i++) {
+                            JSONObject playerJson = playersArray.getJSONObject(i);
+                            PlayerDto playerDto = PlayerDto.createFromJSONObject(playerJson);
                             players.add(playerDto);
                         }
-
-                    } catch(Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        Log.e("ERROR", "ERROR");
+                        ex.printStackTrace();
                     }
 
-                }, Throwable::printStackTrace);
-        mQueue.add(request);
+                }, error -> {
+                    error.printStackTrace();
+                });
+        mQueue.add(playerRequest);
+
+    }
+
+    private void getGameStats() {
+        String url = "https://catan-dice-stats.herokuapp.com/api/game/stats";
+
+
+        JsonObjectRequest gameRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, response -> {
+                    try{
+
+                        gameStatsDto = GameStatsDto.createFromJSONObject(response);
+
+                    } catch (Exception ex) {
+                        Log.e("ERROR", "ERROR");
+                        ex.printStackTrace();
+                    }
+
+                }, error -> {
+                    error.printStackTrace();
+                });
+        mQueue.add(gameRequest);
     }
 
 

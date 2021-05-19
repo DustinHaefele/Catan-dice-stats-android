@@ -16,38 +16,24 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/_player_name"
+            android:text="@string/_number"
             android:textStyle="bold"
             android:textSize="20sp"
             android:padding="4dp"
-            android:id="@+id/player_name"
+            android:id="@+id/number_stat"
             android:textColor="@android:color/black"
             android:layout_weight=".30"
             android:gravity="center" />
 
 
         <TextView
-            android:id="@+id/player_wins"
+            android:id="@+id/rolls_stat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="29dp"
-            android:layout_marginTop="0dp"
-            android:padding="4dp"
-            android:text="@string/_player_wins"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_weight=".25"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/player_games"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="47dp"
+            android:layout_marginStart="44dp"
             android:layout_marginTop="2dp"
             android:padding="4dp"
-            android:text="@string/_player_games"
+            android:text="@string/_player_pct"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -55,7 +41,7 @@
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/player_win_pct"
+            android:id="@+id/pct_stat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"

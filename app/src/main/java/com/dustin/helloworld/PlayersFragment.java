@@ -30,7 +30,7 @@ import java.util.List;
 
 public class PlayersFragment extends Fragment {
 
-    private ArrayList<PlayerDto> players = new ArrayList<>();
+    private static ArrayList<PlayerDto> players;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayout;
@@ -40,12 +40,12 @@ public class PlayersFragment extends Fragment {
 
     private static final String PLAYERS_DTO = "players";
 
-    private PlayersFragment.OnFragmentInteractionListener mListener;
 
-    public static PlayersFragment newInstance(List<PlayerDto> playerDtoList) {
+    public static PlayersFragment newInstance(ArrayList<PlayerDto> playerDtoList) {
         PlayersFragment fragment = new PlayersFragment();
         Bundle args = new Bundle();
         args.putSerializable(PLAYERS_DTO, (Serializable) playerDtoList);
+        players = playerDtoList;
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,19 +59,7 @@ public class PlayersFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayout = new LinearLayoutManager(this.getContext());
 
-        for(PlayerDto player : players) {
-            Log.d("player_name", player.getFull_name());
-        }
-
         mRecyclerView.setLayoutManager(mLayout);
-
-        PlayerDto player = new PlayerDto(1,"theu", "theu", 1,1,1.0);
-
-        players.add(player);
-        for(PlayerDto playera : players) {
-            Log.d("HERE1", "HERE");
-            Log.d("HERE", playera.getGames_played().toString());
-        }
 
         mAdapter = new PlayerAdapter(players);
         mRecyclerView.setAdapter(mAdapter);
@@ -79,26 +67,14 @@ public class PlayersFragment extends Fragment {
         return v;
     }
 
-
     @Override
-    @NonNull
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+//            mLosers = getArguments().getStringArrayList(LOSERS);
+//            mWinner = getArguments().getString(WINNER);
+            players = (ArrayList<PlayerDto>) getArguments().getSerializable(PLAYERS_DTO);
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(ArrayList<PlayerDto> playerDtoList);
-    }
 }

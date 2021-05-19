@@ -15,12 +15,15 @@
     <string name="_game">game</string>
     <string name="_players">players</string>
     <string name="_stats">stats</string>
+    <string name="_player_stats">player stats</string>
     <string name="_player_name">Loser</string>
     <string name="_winner">Winner</string>
     <string name="_player_wins">10</string>
     <string name="_player_games">40</string>
     <string name="_player_pct">25%</string>
     <string name="_submit_players">submit</string>
+    <string name="_number">Number</string>
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
