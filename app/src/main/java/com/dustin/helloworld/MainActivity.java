@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -27,7 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, GamePlayersFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements GameFragment.OnFragmentInteractionListener, GamePlayersFragment.OnFragmentInteractionListener, AddPlayersFragment.OnFragmentInteractionListener {
 
 
     private CountDto countDto = CountService.initializeCountDto();
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
     private ArrayList<PlayerDto> players = new ArrayList<>();
     private GameStatsDto gameStatsDto;
     private RequestQueue mQueue;
+    private PlayerDto playerToAdd;
 
 
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         this.getGameStats();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
 
@@ -72,23 +75,35 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                     case R.id.nav_stats:
                         openFragment(countDto, "STATS");
                         break;
+                    case R.id.nav_add_player:
+                        openFragment(countDto, "ADD_PLAYER");
+                        break;
                 }
                 return true;
             };
     public void openFragment(CountDto countDto, String type) {
         Fragment fragment;
         String tag = null;
-        if(type.equals("GAME")) {
-            fragment = GameFragment.newInstance(countDto);
-            tag = "GAMES_FRAGMENT";
-        } else if (type.equals("STATS")) {
-            fragment = StatsFragment.newInstance(gameStatsDto);
-            tag = "STATS_FRAGMENT";
-        }else if (type.equals("PLAYER_STATS")) {
-            fragment = PlayersFragment.newInstance(players);
-            tag = "PLAYER_STATS_FRAGMENT";
-        } else {
-            fragment = GamePlayersFragment.newInstance(countDto);
+        switch (type) {
+            case "GAME":
+                fragment = GameFragment.newInstance(countDto);
+                tag = "GAMES_FRAGMENT";
+                break;
+            case "STATS":
+                fragment = StatsFragment.newInstance(gameStatsDto);
+                tag = "STATS_FRAGMENT";
+                break;
+            case "PLAYER_STATS":
+                fragment = PlayersFragment.newInstance(players);
+                tag = "PLAYER_STATS_FRAGMENT";
+                break;
+            case "ADD_PLAYER":
+                fragment = AddPlayersFragment.newInstance();
+                tag = "PLAYER_STATS_FRAGMENT";
+                break;
+            default:
+                fragment = GamePlayersFragment.newInstance(countDto, players);
+                break;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -115,9 +130,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                         ex.printStackTrace();
                     }
 
-                }, error -> {
-                    error.printStackTrace();
-                });
+                }, Throwable::printStackTrace);
         mQueue.add(playerRequest);
 
     }
@@ -137,9 +150,7 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
                         ex.printStackTrace();
                     }
 
-                }, error -> {
-                    error.printStackTrace();
-                });
+                }, Throwable::printStackTrace);
         mQueue.add(gameRequest);
     }
 
@@ -150,6 +161,25 @@ public class MainActivity extends AppCompatActivity implements GameFragment.OnFr
         if(submit && !countDto.getWinner().isEmpty() && !countDto.getLosers().isEmpty()) {
             String url = "https://catan-dice-stats.herokuapp.com/api/game";
             JSONObject body = countDto.getCountDtoJson();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, body, response -> {
+                        Log.i("RESPONSE", response.toString());
+                        openFragment(CountService.initializeCountDto(), "GAME");
+                    }, error -> {
+                        openFragment(countDto, "GAME");
+                        error.printStackTrace();
+                    });
+            mQueue.add(jsonObjectRequest);
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(PlayerDto player) {
+        playerToAdd = player;
+        if(!playerToAdd.getUser_name().isEmpty() && !playerToAdd.getFull_name().isEmpty()) {
+            String url = "https://catan-dice-stats.herokuapp.com/api/player";
+            JSONObject body = PlayerDto.createJSON(playerToAdd);
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.POST, url, body, response -> {

@@ -1,8 +1,11 @@
 package com.dustin.helloworld;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,6 +18,8 @@ import com.dustin.helloworld.dto.CountDto;
 import com.dustin.helloworld.services.CountService;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,71 +70,141 @@ public class GameFragment extends Fragment {
     TextView cnt11;
     TextView cnt12;
     
+    @SuppressLint("SetTextI18n")
     private View setTextViews(CountDto countDto, View view) {
+
+        Map<String, Double> standards = new HashMap<>();
+        standards.put("two", 2.78);
+        standards.put("three", 5.56);
+        standards.put("four", 8.33);
+        standards.put("five", 11.11);
+        standards.put("six", 13.89);
+        standards.put("seven", 16.67);
+        standards.put("twelve", 2.78);
+        standards.put("eleven", 5.56);
+        standards.put("ten", 8.33);
+        standards.put("nine", 11.11);
+        standards.put("eight", 13.89);
+
 
         pct2 = (TextView) view.findViewById(R.id.pct2);
         cnt2 = (TextView) view.findViewById(R.id.cnt2);
         cnt2.setText(Integer.toString(countDto.getCountMap().get("two")));
+        if(standards.get("two") > countDto.getCountStatsMap().get("two") * 100) {
+            pct2.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct2.setTextColor(Color.parseColor("#008000"));
+        }
         String percent2 = df.format(countDto.getCountStatsMap().get("two") * 100);
         pct2.setText(percent2);
 
         pct3 = (TextView) view.findViewById(R.id.pct3);
         cnt3 = (TextView) view.findViewById(R.id.cnt3);
         cnt3.setText(Integer.toString(countDto.getCountMap().get("three")));
+        if(standards.get("three") > countDto.getCountStatsMap().get("three") * 100) {
+            pct3.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct3.setTextColor(Color.parseColor("#008000"));
+        }
         String percent3 = df.format(countDto.getCountStatsMap().get("three") * 100);
         pct3.setText(percent3);
 
         pct4 = (TextView) view.findViewById(R.id.pct4);
         cnt4 = (TextView) view.findViewById(R.id.cnt4);
         cnt4.setText(Integer.toString(countDto.getCountMap().get("four")));
+        if(standards.get("four") > countDto.getCountStatsMap().get("four") * 100) {
+            pct4.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct4.setTextColor(Color.parseColor("#008000"));
+        }
         String percent4 = df.format(countDto.getCountStatsMap().get("four") * 100);
         pct4.setText(percent4);
 
         pct5 = (TextView) view.findViewById(R.id.pct5);
         cnt5 = (TextView) view.findViewById(R.id.cnt5);
         cnt5.setText(Integer.toString(countDto.getCountMap().get("five")));
+        if(standards.get("five") > countDto.getCountStatsMap().get("five") * 100) {
+            pct5.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct5.setTextColor(Color.parseColor("#008000"));
+        }
         String percent5 = df.format(countDto.getCountStatsMap().get("five") * 100);
         pct5.setText(percent5);
 
         pct6 = (TextView) view.findViewById(R.id.pct6);
         cnt6 = (TextView) view.findViewById(R.id.cnt6);
         cnt6.setText(Integer.toString(countDto.getCountMap().get("six")));
+        if(standards.get("six") > countDto.getCountStatsMap().get("six") * 100) {
+            pct6.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct6.setTextColor(Color.parseColor("#008000"));
+        }
         String percent6 = df.format(countDto.getCountStatsMap().get("six") * 100);
         pct6.setText(percent6);
 
         pct7 = (TextView) view.findViewById(R.id.pct7);
         cnt7 = (TextView) view.findViewById(R.id.cnt7);
         cnt7.setText(Integer.toString(countDto.getCountMap().get("seven")));
+        if(standards.get("seven") > countDto.getCountStatsMap().get("seven") * 100) {
+            pct7.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct7.setTextColor(Color.parseColor("#008000"));
+        }
         String percent7 = df.format(countDto.getCountStatsMap().get("seven") * 100);
         pct7.setText(percent7);
 
         pct8 = (TextView) view.findViewById(R.id.pct8);
         cnt8 = (TextView) view.findViewById(R.id.cnt8);
         cnt8.setText(Integer.toString(countDto.getCountMap().get("eight")));
+        if(standards.get("eight") > countDto.getCountStatsMap().get("eight") * 100) {
+            pct8.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct8.setTextColor(Color.parseColor("#008000"));
+        }
         String percent8 = df.format(countDto.getCountStatsMap().get("eight") * 100);
         pct8.setText(percent8);
 
         pct9 = (TextView) view.findViewById(R.id.pct9);
         cnt9 = (TextView) view.findViewById(R.id.cnt9);
         cnt9.setText(Integer.toString(countDto.getCountMap().get("nine")));
+        if(standards.get("nine") > countDto.getCountStatsMap().get("nine") * 100) {
+            pct9.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct9.setTextColor(Color.parseColor("#008000"));
+        }
         String percent9 = df.format(countDto.getCountStatsMap().get("nine") * 100);
         pct9.setText(percent9);
 
         pct10 = (TextView) view.findViewById(R.id.pct10);
         cnt10 = (TextView) view.findViewById(R.id.cnt10);
         cnt10.setText(Integer.toString(countDto.getCountMap().get("ten")));
+        if(standards.get("ten") > countDto.getCountStatsMap().get("ten") * 100) {
+            pct10.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct10.setTextColor(Color.parseColor("#008000"));
+        }
         String percent10 = df.format(countDto.getCountStatsMap().get("ten") * 100);
         pct10.setText(percent10);
 
         pct11 = (TextView) view.findViewById(R.id.pct11);
         cnt11 = (TextView) view.findViewById(R.id.cnt11);
         cnt11.setText(Integer.toString(countDto.getCountMap().get("eleven")));
+        if(standards.get("eleven") > countDto.getCountStatsMap().get("eleven") * 100) {
+            pct11.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct11.setTextColor(Color.parseColor("#008000"));
+        }
         String percent11 = df.format(countDto.getCountStatsMap().get("eleven") * 100);
         pct11.setText(percent11);
 
         pct12 = (TextView) view.findViewById(R.id.pct12);
         cnt12 = (TextView) view.findViewById(R.id.cnt12);
         cnt12.setText(Integer.toString(countDto.getCountMap().get("twelve")));
+        if(standards.get("twelve") > countDto.getCountStatsMap().get("twelve") * 100) {
+            pct12.setTextColor(Color.parseColor("#b30000"));
+        } else {
+            pct12.setTextColor(Color.parseColor("#008000"));
+        }
         String percent12 = df.format(countDto.getCountStatsMap().get("twelve") * 100);
         pct12.setText(percent12);
 
@@ -350,7 +425,7 @@ public class GameFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

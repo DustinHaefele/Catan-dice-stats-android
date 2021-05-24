@@ -2,6 +2,8 @@ package com.dustin.helloworld.dto;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PlayerDto {
+public class PlayerDto implements Serializable {
     private Integer id;
     private String user_name;
     private String full_name;
@@ -32,6 +34,18 @@ public class PlayerDto {
             ex.printStackTrace();
         }
         return new PlayerDto();
+    }
+
+    public static JSONObject createJSON(PlayerDto playerDto) {
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("user_name", playerDto.getUser_name());
+            jsonObject.put("full_name", playerDto.getFull_name());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return jsonObject;
+
     }
 
 }

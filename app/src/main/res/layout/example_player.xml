@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_player_name"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:padding="4dp"
             android:id="@+id/player_name"
             android:textColor="@android:color/black"
@@ -35,7 +35,7 @@
             android:padding="4dp"
             android:text="@string/_player_wins"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_weight=".25"
             android:gravity="center" />
@@ -49,7 +49,7 @@
             android:padding="4dp"
             android:text="@string/_player_games"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_weight=".25"
             android:gravity="center" />
@@ -63,7 +63,7 @@
             android:padding="4dp"
             android:text="@string/_player_pct"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_weight=".25"
             android:gravity="center" />
